@@ -11,14 +11,4 @@
       net.ipv6.conf.all.disable_ipv6 = 1
       net.ipv6.conf.default.disable_ipv6 = 1
       net.ipv6.conf.lo.disable_ipv6 = 1
-
-- name: set tcp port range using shell
-  shell: echo "1024 65499" > /proc/sys/net/ipv4/ip_local_port_range
-
-- name: set tcp port range using sysctl
-  sysctl:
-    name: net.ipv4.ip_local_port_range
-    value: "1024 65499"
-    sysctl_set: yes
-    state: present
-    reload: yes
+  notify: reload sysctl configure

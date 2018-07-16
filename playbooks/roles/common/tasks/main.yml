@@ -22,22 +22,11 @@
     state: present
     shell: /bin/bash
 
-# deprecated: because when systemd-resolved service stopped, can`t resolved kr.archive.ubuntu.com
-# - name: stop and disable systemd-resolved service
-#   service:
-#     name: systemd-resolved
-#     state: stopped
-#     enabled: false
-
-- name: check resolv.conf.d directory
-  file:
-    path: /etc/resolvconf/resolv.conf.d
-    state: directory
-
-- name: resolve base setting
+- name: change resolve.conf setting
   copy:
     src: ../files/base
-    dest: /etc/resolvconf/resolv.conf.d/base
+    dest: /etc/resolv.conf
+  notify: stop and disable systemd-resolved service
 
 - name: NTP setting
   lineinfile:
@@ -126,7 +115,6 @@
   with_items:
     - /home/cpmadm
     - /home/ubuntu
-    - /home/ebaykosys
     - /var/log/*log
     - /var/lib/apt/*
     - /var/lib/cloud/data/*

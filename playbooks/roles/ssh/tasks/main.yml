@@ -10,9 +10,4 @@
     regexp: '^#PermitRootLogin prohibit-password'
     replace: 'PermitRootLogin no'
     backup: yes
-
-- name: restart ssh service
-  service:
-    name: sshd
-    state: restarted
-    enabled: true
+  notify: restart ssh service

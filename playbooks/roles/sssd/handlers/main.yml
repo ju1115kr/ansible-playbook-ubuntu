@@ -1,2 +1,6 @@
 ---
-# handlers file for sssd
+- name: restart sssd service
+  service:
+    name: sssd
+    state: restarted
+    enabled: true
