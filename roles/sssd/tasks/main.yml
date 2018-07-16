@@ -1,0 +1,41 @@
+---
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: install sssd
+  apt:
+    name: sssd
+    state: present
+
+- name: set sssd.conf
+  copy:
+    src: ../files/sssd.conf
+    dest: /etc/sssd/sssd.conf
+
+- name: set permission 0600 to sssd.conf
+  file:
+    path: /etc/sssd/sssd.conf
+    mode: 0600
+
+- name: restart sssd service
+  service:
+    name: sssd
+    state: restarted
+    enabled: true
+
+- name: check if exist per-instance directory
+  file:
+    path: /var/lib/cloud/scripts/per-instance
+
+- name: set metaconfig.py
+  copy:
+    src: ../files/metaconfig.py
+    dest: /var/lib/cloud/scripts/per-instance/metaconfig.py
+
+- name: set permission 0755 to metaconfig.py
+  file:
+    path: /var/lib/cloud/scripts/per-instance/metaconfig.py
+    mode: 0755

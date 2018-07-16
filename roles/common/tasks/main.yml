@@ -1,0 +1,144 @@
+---
+- name: Update and upgrade apt packages
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: add user cpmadm
+  user:
+    name: cpmadm
+    password: '$6$AEiavuXp$dqZ5lUnok0WEUbylhP5XLt4vrZiXZRIwKBTV2kxh2CjdPZrPIiDd4wLmo27oM6GnSr6EWxelO.CX7AIvZQstx/'
+    groups:
+      - sudo
+    state: present
+    shell: /bin/bash
+    system: no
+    createhome: no
+
+- name: add user tkbell
+  user:
+    name: tkbell
+    state: present
+    shell: /bin/bash
+
+# deprecated: because when systemd-resolved service stopped, can`t resolved kr.archive.ubuntu.com
+# - name: stop and disable systemd-resolved service
+#   service:
+#     name: systemd-resolved
+#     state: stopped
+#     enabled: false
+
+- name: check resolv.conf.d directory
+  file:
+    path: /etc/resolvconf/resolv.conf.d
+    state: directory
+
+- name: resolve base setting
+  copy:
+    src: ../files/base
+    dest: /etc/resolvconf/resolv.conf.d/base
+
+- name: NTP setting
+  lineinfile:
+    path: /etc/crontab
+    line: "30 * * * * root  /usr/sbin/ntpdate -bu timesync.gmarket.co.kr"
+
+- name: Ubuntu Home Directory Permission setting
+  replace:
+    path: /etc/adduser.conf
+    regexp: '^DIR_MODE=0755'
+    replace: 'DIR_MODE=0700'
+    backup: yes
+
+- name: change default user
+  replace:
+    path: /etc/cloud/cloud.cfg 
+    regexp: '^name: ubuntu'
+    replace: 'name: tkbell'
+    backup: yes
+
+- name: add cpmadm to sudoers
+  lineinfile:
+    path: /etc/sudoers
+    line: "cpmadm ALL=(root) ALL"
+
+- name: remove cloud-init-users in sudoers Directory
+  shell: echo > /etc/sudoers.d/90-cloud-init-users
+
+- name: copy to motd
+  copy:
+    src: ../files/motd
+    dest: /etc/motd
+
+- name: remove hosts file
+  file:
+    path: /etc/hosts
+    state: absent
+
+- name: set sources.list in /etc/apt
+  replace:
+    path: /etc/apt/sources.list
+    regexp: 'nova.clouds.archive.ubuntu.com'
+    replace: 'kr.archive.ubuntu.com'
+    backup: yes
+
+- name: add ProxyOnOff script to profile.d
+  copy:
+    src: ../files/proxyonoff.sh
+    dest: /etc/profile.d/proxyonoff.sh
+        
+- name: modify package_mirrors to cloud.cfg
+  replace:
+    path: /etc/cloud/cloud.cfg
+    regexp: '%(ec2_region)s.ec2.archive.ubuntu.com'
+    replace: 'kr.archive.ubuntu.com'
+    backup: yes
+
+- name: remove %(availability_zone) line in cloud.cfg
+  lineinfile:
+    path: /etc/cloud/cloud.cfg
+    state: absent
+    regexp: '%(availability_zone)s.clouds.archive.ubuntu.com'
+
+- name: remove %(region) line in cloud.cfg
+  lineinfile:
+    path: /etc/cloud/cloud.cfg
+    state: absent
+    regexp: '%(region)s.clouds.archive.ubuntu.com'
+
+# deprecated: because libc file doesn`t exist
+# - name: libc file in resolvconf/update.d
+#   replace:
+#     path: /etc/resolvconf/update.d/libc
+#     regexp: 'SRCHS="$RSLT"'
+#     replace: 'SRCHS="$RSLT gmarket.nh novalocal"'
+#     backup: yes
+
+- name: set timezone to Asia/Seoul
+  timezone:
+    name: Asia/Seoul
+
+- name: remove unnecessary file and log
+  file:
+    path: "{{ item  }}"
+    state: absent
+  with_items:
+    - /home/cpmadm
+    - /home/ubuntu
+    - /home/ebaykosys
+    - /var/log/*log
+    - /var/lib/apt/*
+    - /var/lib/cloud/data/*
+    - /var/lib/cloud/handlers/*
+    - /var/lib/cloud/instance/*
+    - /var/lib/cloud/seed/*
+    - /var/lib/cloud/sem/*
+    - /var/log/cloud*.log
+    - /root/.bash_history
+
+- name: remove ubuntu account
+  user:
+    name: ubuntu
+    state: absent
+    remove: yes

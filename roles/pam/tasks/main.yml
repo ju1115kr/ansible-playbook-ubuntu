@@ -1,0 +1,46 @@
+---
+- name: set password min legth 8
+  replace:
+    path: /etc/login.defs
+    regexp: '#PASS_MIN_LEN'
+    replace: 'PASS_MIN_LEN 8'
+    backup: yes
+
+- name: install libpam-cracklib and set password complicated
+  apt:
+    name: libpam-cracklib
+    state: present
+
+- name: set system-auth in pam.d
+    copy:
+    src: ../files/system-auth
+    dest: /etc/pam.d/system-auth
+
+- name: set common-password in pam.d
+  lineinfile:
+    path: /etc/pam.d/common-password
+    line: "password sufficient pam_unix.so use_authtok remember=5"
+
+- name: set password-auth-ac in pam.d
+  copy:
+    src: ../files/password-auth-ac
+    dest: /etc/pam.d/password-auth-ac
+
+- name: set system-auth-ac in pam.d
+  copy:
+    src: ../files/system-auth-ac
+    dest: /etc/pam.d/system-auth-ac
+
+- name: add command in common-session
+  blockinfile:
+    path: /etc/pam.d/common-session
+    block: |
+      session required                        pam_mkhomedir.so skel=/etc/skel/ umask=0077
+      session optional                        pam_keyinit.so revoke
+      session required                        pam_limits.so
+
+- name: set sshd for pam_access.so
+  replace:
+    path: /etc/pam.d/sshd
+    regexp: "^# account  required     pam_access.so"
+    replace: "account required  pam_access.so"

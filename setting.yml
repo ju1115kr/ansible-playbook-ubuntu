@@ -1,0 +1,21 @@
+---
+- name: Ubuntu 18.04 initalize settings
+  hosts: localhost
+  become: true
+  roles:
+    - name: common
+      tags:
+        - common
+    - name: ssh
+      tags:
+        - ssh
+    - name: sssd
+      tags:
+        - sssd
+    - name: pam
+      tags:
+        - pam
+    - name: tuning
+      tags:
+        - tuning
+

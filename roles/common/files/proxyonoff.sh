@@ -1,0 +1,2 @@
+alias proxyon='export http_proxy=http://172.30.212.32:8080 https_proxy=http://172.30.212.32:8080 HTTP_PROXY=http://172.30.212.32:8080 HTTPS_PROXY=http://172.30.212.32:8080'
+alias proxyoff='unset http_proxy https_proxy HTTP_PROXY HTTPS_PROXY'

@@ -1,0 +1,5 @@
+nameserver 172.30.212.253
+nameserver 172.30.212.254
+search tkbell.gmarket.nh gmarket.nh novalocal
+domain tkbell.gmarket.nh
+options timeout:1 attempts:1 rotate
