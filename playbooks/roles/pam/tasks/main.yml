@@ -12,7 +12,7 @@
     state: present
 
 - name: set system-auth in pam.d
-    copy:
+  copy:
     src: ../files/system-auth
     dest: /etc/pam.d/system-auth
 

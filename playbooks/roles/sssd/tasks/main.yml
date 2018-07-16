@@ -7,7 +7,7 @@
 
 - name: install sssd, python3-minimal
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
     - sssd
