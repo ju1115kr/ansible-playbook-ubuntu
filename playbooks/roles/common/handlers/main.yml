@@ -1,2 +1,6 @@
 ---
-# handlers file for common
+ - name: stop and disable systemd-resolved service
+   service:
+     name: systemd-resolved
+     state: stopped
+     enabled: false

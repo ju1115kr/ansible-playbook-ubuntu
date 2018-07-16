@@ -1,2 +1,3 @@
 ---
-# handlers file for tuning
+- name: reload sysctl configure
+  shell: sysctl -p

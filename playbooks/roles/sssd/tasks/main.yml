@@ -5,26 +5,24 @@
     upgrade: yes
     update_cache: yes
 
-- name: install sssd
+- name: install sssd, python3-minimal
   apt:
-    name: sssd
+    name: {{ item }}
     state: present
+  with_items:
+    - sssd
+    - python3-minimal
 
 - name: set sssd.conf
   copy:
     src: ../files/sssd.conf
     dest: /etc/sssd/sssd.conf
+  notify: restart sssd service
 
 - name: set permission 0600 to sssd.conf
   file:
     path: /etc/sssd/sssd.conf
     mode: 0600
-
-- name: restart sssd service
-  service:
-    name: sssd
-    state: restarted
-    enabled: true
 
 - name: check if exist per-instance directory
   file:
