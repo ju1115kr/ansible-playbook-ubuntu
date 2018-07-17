@@ -14,7 +14,7 @@ How to use
 
       # apt update; apt install ansible
       # git clone http://github.ebaykorea.com/CloudPlatform/ansible-playbook-ubuntu
-      # ansible-playbook ansible-playbook-ubuntu/playbooks/setting.yml
+      # ansible-playbook -i ansible-playbook-ubuntu/hosts ansible-playbook-ubuntu/playbooks/setting.yml
 
 Pre-checks
 ----------------
