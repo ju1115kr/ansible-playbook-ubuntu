@@ -22,6 +22,9 @@
     state: present
     shell: /bin/bash
 
+- name: delete password tkbell`s
+  shell: passwd -d tkbell
+
 - name: change resolve.conf setting
   copy:
     src: ../files/base
@@ -43,7 +46,7 @@
 - name: change default user
   replace:
     path: /etc/cloud/cloud.cfg 
-    regexp: '^name: ubuntu'
+    regexp: 'name: ubuntu'
     replace: 'name: tkbell'
     backup: yes
 
@@ -80,7 +83,7 @@
 - name: modify package_mirrors to cloud.cfg
   replace:
     path: /etc/cloud/cloud.cfg
-    regexp: '%(ec2_region)s.ec2.archive.ubuntu.com'
+    regexp: '%\(ec2_region\)s.ec2.archive.ubuntu.com'
     replace: 'kr.archive.ubuntu.com'
     backup: yes
 
@@ -88,21 +91,7 @@
   lineinfile:
     path: /etc/cloud/cloud.cfg
     state: absent
-    regexp: '%(availability_zone)s.clouds.archive.ubuntu.com'
-
-- name: remove %(region) line in cloud.cfg
-  lineinfile:
-    path: /etc/cloud/cloud.cfg
-    state: absent
-    regexp: '%(region)s.clouds.archive.ubuntu.com'
-
-# deprecated: because libc file doesn`t exist
-# - name: libc file in resolvconf/update.d
-#   replace:
-#     path: /etc/resolvconf/update.d/libc
-#     regexp: 'SRCHS="$RSLT"'
-#     replace: 'SRCHS="$RSLT gmarket.nh novalocal"'
-#     backup: yes
+    regexp: 'clouds.archive.ubuntu.com'
 
 - name: set timezone to Asia/Seoul
   timezone:
@@ -124,9 +113,3 @@
     - /var/lib/cloud/sem/*
     - /var/log/cloud*.log
     - /root/.bash_history
-
-- name: remove ubuntu account
-  user:
-    name: ubuntu
-    state: absent
-    remove: yes

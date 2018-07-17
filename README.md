@@ -1,7 +1,7 @@
 ansible-playbook-ubuntu
 =========
 
-For automated initialize settings in Ubuntu 18.04 and others
+For automated initialization settings in Ubuntu 18.04 and others
 
 Requirements
 ------------
