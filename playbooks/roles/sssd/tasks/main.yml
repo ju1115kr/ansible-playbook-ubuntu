@@ -36,14 +36,3 @@
   environment:
     http_proxy: http://proxy.gmarket.co.kr:8080
     https_proxy: http://proxy.gmarket.co.kr:8080
-
-- name: copy executable script for scheduling(fetch_metaconfig)
-  copy:
-    src: ../files/fecth_metaconfig
-    dest: /usr/sbin/fecth_metaconfig
-    mode: 0755
-
-- name: scheduling setting(fetch_metaconfig)
-  lineinfile:
-    path: /etc/crontab
-    line: "30 * * * * root  /usr/sbin/fecth_metaconfig"
