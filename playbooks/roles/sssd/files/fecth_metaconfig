@@ -1,4 +1,0 @@
-#!/bin/sh
-
-wget -e use_proxy=yes -e http_proxy=http://proxy.gmarket.co.kr:8080 http://github.ebaykorea.com/raw/CloudPlatform/metaconfig/master/metaconfig.py?token=AAAE3flWPh0T4CkiLIGbxlQjthPZs9_Lks5bV8nLwA%3D%3D -O /var/lib/cloud/scripts/per-instance/metaconfig.py
-chmod 755 /var/lib/cloud/scripts/per-instance/metaconfig.py
