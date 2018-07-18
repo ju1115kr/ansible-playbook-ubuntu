@@ -27,13 +27,12 @@
 - name: check if exist per-instance directory
   file:
     path: /var/lib/cloud/scripts/per-instance
-
+    
 - name: set metaconfig.py
-  copy:
-    src: ../files/metaconfig.py
+  get_url:
+    url: http://github.ebaykorea.com/raw/CloudPlatform/metaconfig/master/metaconfig.py?token=AAAE3flWPh0T4CkiLIGbxlQjthPZs9_Lks5bV8nLwA%3D%3D
     dest: /var/lib/cloud/scripts/per-instance/metaconfig.py
-
-- name: set permission 0755 to metaconfig.py
-  file:
-    path: /var/lib/cloud/scripts/per-instance/metaconfig.py
     mode: 0755
+  environment:
+    http_proxy: http://proxy.gmarket.co.kr:8080
+    https_proxy: http://proxy.gmarket.co.kr:8080
